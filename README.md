@@ -2,6 +2,8 @@
 
 Watch the walkthrough: https://youtu.be/5N-okeDdIuI
 
+→ **[Getting started & hotkeys reference](HOTKEYS.md)**
+
 My personal Mac setup, managed with nix-darwin and home-manager.
 One repo, one command, and a fresh Mac ends up configured the same way every time.
 
