@@ -16,6 +16,12 @@ in
     jq        # json on the command line
     lazygit
     neovim
+    nodejs    # node + npm + npx
+    go        # go compiler + toolchain
+    # docker without Docker Desktop: colima runs a lean Lima VM
+    colima         # lightweight container runtime (low memory footprint)
+    docker         # docker cli
+    docker-compose # compose v2 plugin
     # the font everything renders in
     nerd-fonts.hack
   ];

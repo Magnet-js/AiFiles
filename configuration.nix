@@ -36,11 +36,19 @@
     onActivation.extraFlags = [ "--force" ];
     brews = [
       "herdr"
+      "defaultbrowser"  # cli to set the default browser
     ];
     casks = [
       "wezterm"
       "claude-code"
       "github"
+      "brave-browser"
     ];
   };
+
+  # Make Brave the default browser. macOS may still show a one-time
+  # confirmation dialog the first time this runs.
+  system.activationScripts.postActivation.text = ''
+    sudo -u ${user} /opt/homebrew/bin/defaultbrowser brave || true
+  '';
 }
