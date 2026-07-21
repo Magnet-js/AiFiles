@@ -18,12 +18,13 @@ cd ~/.dotfiles
 ./bootstrap.sh
 ```
 
-[`bootstrap.sh`](bootstrap.sh) does four things in order:
+[`bootstrap.sh`](bootstrap.sh) does five things in order:
 
 1. Installs Determinate Nix if it isn't already there.
 2. Symlinks the repo to `~/.dotfiles` (required before the first build because [`home.nix`](home.nix) resolves config paths through `~/.dotfiles`).
 3. Checks the `user` configured in [`flake.nix`](flake.nix) against your macOS username and offers to fix it if they differ.
-4. Runs the first `darwin-rebuild switch` — fetching `darwin-rebuild` from the nix-darwin 26.05 release branch and applying this repo's locked [`flake.nix`](flake.nix).
+4. Generates an `ed25519` SSH key at `~/.ssh/id_ed25519` (if missing), adds it to `ssh-agent`, and prints the public key so you can add it to GitHub.
+5. Runs the first `darwin-rebuild switch` — fetching `darwin-rebuild` from the nix-darwin 26.05 release branch and applying this repo's locked [`flake.nix`](flake.nix).
 
 ### Personalise before running
 

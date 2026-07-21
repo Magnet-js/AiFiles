@@ -43,7 +43,74 @@ else
   echo "    flake.nix already matches \"$REAL_USER\", nothing to do."
 fi
 
-echo "==> Step 4: first darwin-rebuild switch (pinned to nix-darwin-26.05)"
+echo "==> Step 4: generate and load an SSH key for GitHub"
+# Generate a modern SSH key once so git+ssh works right after bootstrap.
+SSH_DIR="$HOME/.ssh"
+SSH_KEY="$SSH_DIR/id_ed25519"
+SSH_PUB="${SSH_KEY}.pub"
+SSH_CONFIG="$SSH_DIR/config"
+SSH_COMMENT="${REAL_USER}@$(hostname -s 2>/dev/null || hostname)"
+
+if [ ! -d "$SSH_DIR" ]; then
+  mkdir -p "$SSH_DIR"
+  chmod 700 "$SSH_DIR"
+fi
+
+if [ -f "$SSH_KEY" ]; then
+  echo "    $SSH_KEY already exists, skipping generation."
+else
+  ssh-keygen -t ed25519 -C "$SSH_COMMENT" -f "$SSH_KEY" -N ""
+fi
+
+if [ ! -f "$SSH_PUB" ]; then
+  ssh-keygen -y -f "$SSH_KEY" > "$SSH_PUB"
+fi
+
+if [ -z "${SSH_AUTH_SOCK:-}" ]; then
+  eval "$(ssh-agent -s)" >/dev/null
+else
+  set +e
+  ssh-add -l >/dev/null 2>&1
+  SSH_ADD_LIST_RC=$?
+  set -e
+  if [ "$SSH_ADD_LIST_RC" -eq 2 ]; then
+    eval "$(ssh-agent -s)" >/dev/null
+  fi
+fi
+
+if ssh-add --apple-use-keychain "$SSH_KEY" >/dev/null 2>&1; then
+  echo "    Added $SSH_KEY to ssh-agent."
+elif ssh-add "$SSH_KEY" >/dev/null 2>&1; then
+  echo "    Added $SSH_KEY to ssh-agent."
+else
+  echo "    Could not add $SSH_KEY to ssh-agent automatically."
+fi
+
+if [ ! -f "$SSH_CONFIG" ]; then
+  touch "$SSH_CONFIG"
+  chmod 600 "$SSH_CONFIG"
+fi
+if grep -Eq '^[[:space:]]*Host[[:space:]]+github\.com([[:space:]]|$)' "$SSH_CONFIG"; then
+  echo "    ~/.ssh/config already has a github.com host entry, leaving it as-is."
+else
+  {
+    echo ""
+    echo "Host github.com"
+    echo "  AddKeysToAgent yes"
+    echo "  UseKeychain yes"
+    echo "  IdentityFile ~/.ssh/id_ed25519"
+    echo "  IdentitiesOnly yes"
+  } >> "$SSH_CONFIG"
+  echo "    Added github.com SSH config entry in ~/.ssh/config."
+fi
+
+echo "    Public key (add it at https://github.com/settings/keys):"
+cat "$SSH_PUB"
+if command -v pbcopy >/dev/null 2>&1; then
+  echo "    To copy it on macOS: pbcopy < \"$SSH_PUB\""
+fi
+
+echo "==> Step 5: first darwin-rebuild switch (pinned to nix-darwin-26.05)"
 # darwin-rebuild doesn't exist yet on a fresh machine, so run it straight
 # from the flake this once. After this, rebuild.sh works normally.
 # This fetches the darwin-rebuild tool from the nix-darwin-26.05 release branch,
