@@ -43,6 +43,7 @@
       "claude-code"
       "github"
       "brave-browser"
+      "opensuperwhisper"
     ];
   };
 
