@@ -42,7 +42,7 @@ in
       push = "git push";
       pull = "git pull";
       m = "git switch main";
-      cc = "claude --dangerously-skip-permissions";
+      cc = "claude";
       co = "codex --full-auto";
     };
   };
