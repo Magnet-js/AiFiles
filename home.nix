@@ -24,6 +24,7 @@ in
     docker-compose # compose v2 plugin
     # the font everything renders in
     nerd-fonts.hack
+    gh
   ];
   fonts.fontconfig.enable = true;
   home.sessionVariables.EDITOR = "nvim";

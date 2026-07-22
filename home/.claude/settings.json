@@ -15,6 +15,6 @@
     "type": "command",
     "command": "input=$(cat); model=$(echo \"$input\" | jq -r '.model.display_name'); used=$(echo \"$input\" | jq -r '.context_window.used_percentage // empty'); if [ -n \"$used\" ]; then printf \"[...]"
   },
-  "effortLevel": "low",
+  "effortLevel": "high",
   "theme": "dark-ansi"
 }
