@@ -18,6 +18,9 @@ in
     neovim
     nodejs    # node + npm + npx
     go        # go compiler + toolchain
+    gopls     # go language server
+    typescript-language-server # ts/js language server
+    typescript # tsc + lib.d.ts for the language server
     # docker without Docker Desktop: colima runs a lean Lima VM
     colima         # lightweight container runtime (low memory footprint)
     docker         # docker cli
