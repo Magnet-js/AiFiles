@@ -25,6 +25,7 @@ in
     # the font everything renders in
     nerd-fonts.hack
     gh
+    mise
   ];
   fonts.fontconfig.enable = true;
   home.sessionVariables.EDITOR = "nvim";
